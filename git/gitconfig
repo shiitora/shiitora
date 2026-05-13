@@ -1,0 +1,51 @@
+[core]
+	editor = vim
+	autocrlf = input
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	pager = less -FX
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	lg = log --oneline --graph --decorate --all
+	lg2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	df = diff
+	dfs = diff --staged
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	aliases = config --get-regexp alias
+	cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"
+
+[pull]
+	rebase = false
+
+[push]
+	default = current
+
+[fetch]
+	prune = true
+
+[merge]
+	tool = vimdiff
+
+[diff]
+	algorithm = patience
+
+[init]
+	defaultBranch = main
+
+# ユーザー情報は ~/.gitconfig.local に記載してください
+# 例:
+# [user]
+# 	name = Your Name
+# 	email = your@email.com
+[include]
+	path = ~/.gitconfig.local

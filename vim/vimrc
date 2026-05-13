@@ -1,0 +1,112 @@
+" ----------------------------
+" 基本設定
+" ----------------------------
+set nocompatible
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8,sjis,euc-jp,latin1
+
+" ----------------------------
+" 表示設定
+" ----------------------------
+set number
+set relativenumber
+set cursorline
+set colorcolumn=80,120
+set wrap
+set linebreak
+set showbreak=↪\
+set list
+set listchars=tab:▸\ ,trail:·,extends:›,precedes:‹
+set showcmd
+set showmatch
+set laststatus=2
+set ruler
+set scrolloff=5
+set sidescrolloff=5
+syntax enable
+
+" ----------------------------
+" インデント設定
+" ----------------------------
+set autoindent
+set smartindent
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+" ファイルタイプ別インデント
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4
+autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
+autocmd FileType make setlocal noexpandtab
+
+" ----------------------------
+" 検索設定
+" ----------------------------
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+nnoremap <Esc><Esc> :nohlsearch<CR>
+
+" ----------------------------
+" 操作設定
+" ----------------------------
+set backspace=indent,eol,start
+set clipboard=unnamedplus
+set mouse=a
+set ttymouse=xterm2
+set history=1000
+set undolevels=1000
+set autoread
+set hidden
+
+" ----------------------------
+" バックアップ設定
+" ----------------------------
+set nobackup
+set noswapfile
+set undofile
+set undodir=~/.vim/undo
+
+" ----------------------------
+" キーマッピング
+" ----------------------------
+let mapleader = "\<Space>"
+
+" ファイル保存
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :q<CR>
+nnoremap <Leader>wq :wq<CR>
+
+" ウィンドウ操作
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" バッファ操作
+nnoremap <Leader>bn :bnext<CR>
+nnoremap <Leader>bp :bprev<CR>
+nnoremap <Leader>bd :bdelete<CR>
+
+" 行の移動 (表示行単位)
+nnoremap j gj
+nnoremap k gk
+
+" ビジュアルモードでのインデント維持
+vnoremap < <gv
+vnoremap > >gv
+
+" ----------------------------
+" ステータスライン
+" ----------------------------
+set statusline=%f\ %m%r%h%w%=[%{&ff}]\ [%{&fenc}]\ [%Y]\ %l/%L\ (%p%%)\ %c
+
+" ----------------------------
+" ローカル設定
+" ----------------------------
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
