@@ -32,5 +32,49 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "genshijin@genshijin": true,
+    "superpowers@superpowers-marketplace": true,
+    "document-skills@anthropic-agent-skills": true,
+    "playwright-skill@playwright-skill": true,
+    "humanizer-ja@humanizer-ja": true,
+    "planning-with-files@planning-with-files": true,
+    "superpowers-dev@superpowers-marketplace": true,
+    "claude-session-driver@superpowers-marketplace": true,
+    "health@waza": true
+  },
+  "extraKnownMarketplaces": {
+    "genshijin": {
+      "source": {
+        "source": "github",
+        "repo": "InterfaceX-co-jp/genshijin"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "playwright-skill": {
+      "source": {
+        "source": "github",
+        "repo": "lackeyjb/playwright-skill"
+      }
+    },
+    "waza": {
+      "source": {
+        "source": "github",
+        "repo": "tw64/claude-health"
+      }
+    }
+  },
+  "theme": "dark"
 }
