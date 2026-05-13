@@ -43,9 +43,5 @@
 	defaultBranch = main
 
 # ユーザー情報は ~/.gitconfig.local に記載してください
-# 例:
-# [user]
-# 	name = Your Name
-# 	email = your@email.com
 [include]
 	path = ~/.gitconfig.local
