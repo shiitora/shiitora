@@ -36,7 +36,6 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 
-" ファイルタイプ別インデント
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4
 autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType make setlocal noexpandtab
@@ -75,27 +74,22 @@ set undodir=~/.vim/undo
 " ----------------------------
 let mapleader = "\<Space>"
 
-" ファイル保存
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>wq :wq<CR>
 
-" ウィンドウ操作
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-" バッファ操作
 nnoremap <Leader>bn :bnext<CR>
 nnoremap <Leader>bp :bprev<CR>
 nnoremap <Leader>bd :bdelete<CR>
 
-" 行の移動 (表示行単位)
 nnoremap j gj
 nnoremap k gk
 
-" ビジュアルモードでのインデント維持
 vnoremap < <gv
 vnoremap > >gv
 

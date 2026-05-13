@@ -19,11 +19,15 @@
 ├── claude/
 │   └── settings.json   # Claude Code設定
 └── scripts/
-    ├── install.sh      # シンボリックリンク作成スクリプト
-    └── packages.sh     # パッケージインストールスクリプト
+    ├── install.sh        # シンボリックリンク作成スクリプト
+    ├── packages.sh       # パッケージインストールスクリプト
+    ├── gdrive-sync.sh    # Google Drive ↔ ローカル ミラーリング
+    ├── capture.sh        # 現在の環境をGoogle Driveに保存
+    ├── restore.sh        # Google Driveから環境を復元
+    └── setup-new-pc.ps1  # Windows新規セットアップ (PowerShell)
 ```
 
-## 新しい端末へのセットアップ手順
+## 新しいLinux端末へのセットアップ手順
 
 ```bash
 # 1. リポジトリをクローン
@@ -38,15 +42,18 @@ source ~/.bashrc
 
 # 4. 個人情報を設定
 vim ~/.gitconfig.local
-# [user]
-#   name = Your Name
-#   email = your@email.com
 
-# 5. (任意) この端末固有の設定
-vim ~/.bashrc.local
+# 5. Google Driveから環境を復元 (スキル + パッケージ)
+./scripts/gdrive-sync.sh install  # rcloneインストール
+rclone config                     # gdrive認証
+./scripts/restore.sh              # 復元
+```
 
-# 6. (任意) パッケージのインストール
-./scripts/packages.sh
+## 新しいWindows端末へのセットアップ手順
+
+```powershell
+# PowerShellで実行
+.\scripts\setup-new-pc.ps1
 ```
 
 ## 端末固有の設定
@@ -59,9 +66,53 @@ vim ~/.bashrc.local
 | `~/.gitconfig.local` | 名前・メールアドレス |
 | `~/.vimrc.local` | この端末固有のVim設定 |
 
-## 設定のカスタマイズ
+## Google Drive 経由の同期 (rclone)
 
-他の端末で使っている設定があれば、このリポジトリの各ファイルに追加してください。
+Windows の `C:\G` (Google Drive) に置いた設定をこのLinuxに持ってくることができます。
+
+### 初回セットアップ (このLinux側)
+
+```bash
+./scripts/gdrive-sync.sh install
+rclone config
+# → n (新規) → 名前: gdrive → 種類: drive → ブラウザで認証
+```
+
+### ソース端末 (Windows等) でキャプチャ
+
+```bash
+./scripts/capture.sh
+```
+
+### このLinuxに復元
+
+```bash
+./scripts/restore.sh              # 全部復元
+./scripts/restore.sh claude       # Claude Code スキル・設定のみ
+./scripts/restore.sh npm          # npm のみ
+./scripts/restore.sh pip          # pip のみ
+./scripts/restore.sh apt          # apt のみ
+```
+
+### 同期対象
+
+| Google Drive | ローカル | 内容 |
+|---|---|---|
+| `G:\.claude\` | `~/.claude/` | Claude Code設定・スキル (slash commands) |
+| `G:\packages\npm-globals.txt` | (インストールに使用) | npm グローバルパッケージ一覧 |
+| `G:\packages\pip-requirements.txt` | (インストールに使用) | pip パッケージ一覧 |
+| `G:\packages\apt-packages.txt` | (インストールに使用) | apt パッケージ一覧 |
+
+### スクリプト一覧
+
+| スクリプト | 実行場所 | 用途 |
+|---|---|---|
+| `scripts/capture.sh` | ソース端末 | 現在の環境をGoogle Driveに保存 |
+| `scripts/restore.sh` | このLinux | Google DriveからLinuxに復元 |
+| `scripts/gdrive-sync.sh` | どちらでも | Google Drive ↔ ローカル ミラーリング |
+| `scripts/setup-new-pc.ps1` | Windows | 新規Windows PCのセットアップ |
+
+## 設定のカスタマイズ
 
 - シェルのエイリアスや関数: `shell/bashrc`
 - Git設定: `git/gitconfig`

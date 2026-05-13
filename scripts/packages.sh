@@ -1,152 +1,57 @@
 #!/usr/bin/env bash
 # 必要なパッケージ・ツールのインストールスクリプト
-# 使い方: ./scripts/packages.sh
+# 使い方: ./scripts/packages.sh [all|apt|npm|pip|go|cargo]
 
 set -euo pipefail
 
 log()  { echo "[INFO]  $*"; }
 warn() { echo "[WARN]  $*" >&2; }
 
-# ----------------------------
-# apt パッケージ
-# ----------------------------
 APT_PACKAGES=(
-  # 基本ツール
-  curl
-  wget
-  git
-  vim
-  tmux
-  make
-  build-essential
-  unzip
-  jq
-  tree
-  ripgrep
-  fd-find
-  bat
-  # 開発ツール
-  python3
-  python3-pip
-  python3-venv
-  # ネットワーク
-  net-tools
-  dnsutils
-  httpie
+  curl wget git vim tmux make build-essential unzip jq tree
+  ripgrep fd-find bat python3 python3-pip python3-venv
+  net-tools dnsutils httpie
 )
 
-install_apt_packages() {
-  log "=== apt パッケージのインストール ==="
-  if ! command -v apt-get &>/dev/null; then
-    warn "apt-get が見つかりません。スキップします。"
-    return
-  fi
+NPM_GLOBAL_PACKAGES=(typescript ts-node @anthropic-ai/claude-code prettier eslint)
 
-  sudo apt-get update -q
-  sudo apt-get install -y "${APT_PACKAGES[@]}"
-  log "apt パッケージのインストール完了"
-}
+PIP_PACKAGES=(black isort flake8 mypy ipython httpx rich anthropic)
 
-# ----------------------------
-# Node.js / npm グローバルパッケージ
-# ----------------------------
-NPM_GLOBAL_PACKAGES=(
-  typescript
-  ts-node
-  @anthropic-ai/claude-code
-  prettier
-  eslint
-)
-
-install_npm_packages() {
-  log "=== npm グローバルパッケージのインストール ==="
-  if ! command -v npm &>/dev/null; then
-    warn "npm が見つかりません。スキップします。"
-    return
-  fi
-
-  for pkg in "${NPM_GLOBAL_PACKAGES[@]}"; do
-    npm install -g "$pkg" || warn "インストール失敗: $pkg"
-  done
-  log "npm グローバルパッケージのインストール完了"
-}
-
-# ----------------------------
-# Python pip パッケージ
-# ----------------------------
-PIP_PACKAGES=(
-  black
-  isort
-  flake8
-  mypy
-  ipython
-  httpx
-  rich
-  anthropic
-)
-
-install_pip_packages() {
-  log "=== pip パッケージのインストール ==="
-  if ! command -v pip3 &>/dev/null; then
-    warn "pip3 が見つかりません。スキップします。"
-    return
-  fi
-
-  pip3 install --user "${PIP_PACKAGES[@]}"
-  log "pip パッケージのインストール完了"
-}
-
-# ----------------------------
-# Go ツール
-# ----------------------------
 GO_TOOLS=(
   "golang.org/x/tools/gopls@latest"
   "github.com/go-delve/delve/cmd/dlv@latest"
   "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
 )
 
-install_go_tools() {
-  log "=== Go ツールのインストール ==="
-  if ! command -v go &>/dev/null; then
-    warn "go が見つかりません。スキップします。"
-    return
-  fi
+CARGO_TOOLS=(cargo-watch cargo-edit)
 
-  for tool in "${GO_TOOLS[@]}"; do
-    go install "$tool" || warn "インストール失敗: $tool"
-  done
-  log "Go ツールのインストール完了"
+install_apt_packages() {
+  command -v apt-get &>/dev/null || { warn "apt-get なし。スキップ"; return; }
+  sudo apt-get update -q && sudo apt-get install -y "${APT_PACKAGES[@]}"
 }
 
-# ----------------------------
-# Rust / Cargo ツール
-# ----------------------------
-CARGO_TOOLS=(
-  "cargo-watch"
-  "cargo-edit"
-)
+install_npm_packages() {
+  command -v npm &>/dev/null || { warn "npm なし。スキップ"; return; }
+  for pkg in "${NPM_GLOBAL_PACKAGES[@]}"; do npm install -g "$pkg" || warn "失敗: $pkg"; done
+}
+
+install_pip_packages() {
+  command -v pip3 &>/dev/null || { warn "pip3 なし。スキップ"; return; }
+  pip3 install --user "${PIP_PACKAGES[@]}"
+}
+
+install_go_tools() {
+  command -v go &>/dev/null || { warn "go なし。スキップ"; return; }
+  for tool in "${GO_TOOLS[@]}"; do go install "$tool" || warn "失敗: $tool"; done
+}
 
 install_cargo_tools() {
-  log "=== Cargo ツールのインストール ==="
-  if ! command -v cargo &>/dev/null; then
-    warn "cargo が見つかりません。スキップします。"
-    return
-  fi
-
-  for tool in "${CARGO_TOOLS[@]}"; do
-    cargo install "$tool" || warn "インストール失敗: $tool"
-  done
-  log "Cargo ツールのインストール完了"
+  command -v cargo &>/dev/null || { warn "cargo なし。スキップ"; return; }
+  for tool in "${CARGO_TOOLS[@]}"; do cargo install "$tool" || warn "失敗: $tool"; done
 }
 
-# ----------------------------
-# メイン
-# ----------------------------
 main() {
-  log "パッケージのインストールを開始します"
-
   local targets="${1:-all}"
-
   case "$targets" in
     apt)   install_apt_packages ;;
     npm)   install_npm_packages ;;
@@ -160,13 +65,8 @@ main() {
       install_go_tools
       install_cargo_tools
       ;;
-    *)
-      echo "使い方: $0 [all|apt|npm|pip|go|cargo]"
-      exit 1
-      ;;
+    *) echo "使い方: $0 [all|apt|npm|pip|go|cargo]"; exit 1 ;;
   esac
-
-  echo ""
   log "✓ 完了！"
 }
 
