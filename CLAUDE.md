@@ -20,7 +20,8 @@
 │   └── settings.json   # Claude Code設定
 └── scripts/
     ├── install.sh      # シンボリックリンク作成スクリプト
-    └── packages.sh     # パッケージインストールスクリプト
+    ├── packages.sh     # パッケージインストールスクリプト
+    └── gdrive-sync.sh  # Google Drive ↔ ローカル ミラーリングスクリプト
 ```
 
 ## 新しい端末へのセットアップ手順
@@ -58,6 +59,45 @@ vim ~/.bashrc.local
 | `~/.bashrc.local` | この端末固有のエイリアス・PATH設定など |
 | `~/.gitconfig.local` | 名前・メールアドレス |
 | `~/.vimrc.local` | この端末固有のVim設定 |
+
+## Google Drive 経由の同期 (rclone)
+
+Windows の `C:\G` (Google Drive) に置いた `.claude` などをLinuxと同期できます。
+
+### 初回セットアップ
+
+```bash
+# 1. rclone をインストール
+./scripts/gdrive-sync.sh install
+
+# 2. Google Drive を設定 (ブラウザ認証が開く)
+rclone config
+# → n (新規) → 名前: gdrive → 種類: drive → ブラウザで認証
+
+# 3. 設定確認
+./scripts/gdrive-sync.sh status
+```
+
+### 日常的な同期
+
+```bash
+# Google Drive → ローカルにミラーリング (Windows→Linux)
+./scripts/gdrive-sync.sh pull
+
+# ローカル → Google Driveにミラーリング (Linux→Windows)
+./scripts/gdrive-sync.sh push
+
+# 双方向
+./scripts/gdrive-sync.sh both
+```
+
+### 同期対象
+
+| Google Drive | ローカル |
+|---|---|
+| `G:\.claude\` | `~/.claude/` |
+
+`scripts/gdrive-sync.sh` の `SYNC_TARGETS` を編集して同期対象を追加できます。
 
 ## 設定のカスタマイズ
 
