@@ -76,5 +76,6 @@
       }
     }
   },
+  "remoteControlAtStartup": true,
   "theme": "dark"
 }

@@ -68,3 +68,33 @@ vim ~/.bashrc.local
 - Vimの設定: `vim/vimrc`
 - Tmuxの設定: `tmux/tmux.conf`
 - Claude Codeの権限設定: `claude/settings.json`
+
+## 他の端末のスレッドに入る (Remote Control)
+
+`claude/settings.json` で `remoteControlAtStartup: true` を設定しているため、
+`./scripts/install.sh` を実行した端末では、対話セッション起動時に自動で
+Remote Control に接続されます。これにより [claude.ai/code](https://claude.ai/code)
+やスマホアプリ (Code タブ) のセッション一覧からその端末のスレッドに入れます。
+
+| やりたいこと | 操作 |
+|---|---|
+| 他端末のスレッドに入る | claude.ai/code かスマホアプリのセッション一覧から選ぶ (PCアイコン＋緑のドットが接続中) |
+| URLで直接入る | `https://claude.ai/code/<session_id>` |
+| 接続中のスレッドのURL/QRを表示 | セッション内で `/remote-control` (略: `/rc`) |
+| 未接続のスレッドを繋ぐ | そのターミナルで `/remote-control` を実行 (会話履歴を引き継ぐ) |
+| 止めたサーバーを復活させる | 同じディレクトリで `claude remote-control --continue` (停止後4時間以内) |
+| 複数スレッドを遠隔操作する | `claude remote-control` (サーバーモード) |
+
+注意点：
+
+- この設定は**ユーザー設定** (`~/.claude/settings.json`) として効きます。
+  プロジェクト側の `.claude/settings.json` に `true` を書いても無視される仕様です
+  (リポジトリをクローンした他人の端末を勝手に接続させないため)。逆に `false` は効きます。
+- `DISABLE_TELEMETRY` / `DO_NOT_TRACK` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` /
+  `DISABLE_GROWTHBOOK` や `ANTHROPIC_BASE_URL` を設定している端末では Remote Control が使えません。
+  `~/.bashrc.local` でこれらを設定していないか確認してください。
+- 自動接続は自分の claude.ai アカウントでサインインするため、他人にアクセス権は渡りません。
+- 接続中はセッションの会話内容が Anthropic のサーバーに保存されます
+  (端末間で同期し、切断後に復帰するため)。コードの実行とファイルアクセスは端末側のままです。
+- 無効化したい端末では `~/.claude/settings.json` のシンボリックリンクを外すのではなく、
+  そのプロジェクトの `.claude/settings.local.json` に `{"remoteControlAtStartup": false}` を書いてください。
